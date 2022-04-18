@@ -4,6 +4,7 @@
 class CropDB {
     public:
         CropDB();
+        ~CropDB();
         void reload();
         void printToFile();
         void insert();
@@ -16,8 +17,8 @@ class CropDB {
         int getValidIndex();
         void readFile(const char fileName[]);
         void print(bool searchRange, double min, double max);
-
+        
         enum {MAX_CROPS = 500};
-        CropInfo crops[MAX_CROPS];
+        CropInfo *crops;
         int numCrops;
 };
