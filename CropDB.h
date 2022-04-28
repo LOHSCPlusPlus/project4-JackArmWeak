@@ -15,10 +15,10 @@ class CropDB {
         void dbMenu();
     private:
         int getValidIndex();
+        void expand();
+        void shrink();
         void readFile(const char fileName[]);
         void print(bool searchRange, double min, double max);
-        
-        enum {MAX_CROPS = 500};
         CropInfo *crops;
         int numCrops;
 };
