@@ -8,11 +8,8 @@ Clear all the values to zero.
 */
 CropInfo::CropInfo(){
     cropCode = 0;
-    name = new char [MAX_NAME_LEN];
+    name = nullptr;
     yieldsByYear = new double [NUM_YEARS];
-    for(int i = 0; i < MAX_NAME_LEN; i++) {
-      name[i] = '\0';
-    }
     for(int i = 0; i < NUM_YEARS; i++) {
       yieldsByYear[i] = 0;
     }
@@ -24,14 +21,15 @@ CropInfo::~CropInfo(){
 }
 
 CropInfo::CropInfo(const CropInfo &other) {
-  strcpy(name,other.name); 
+  name = createCharPtr(other.name); 
   for(int i = 0; i < NUM_YEARS; i++) {
     yieldsByYear[i] = other.yieldsByYear[i];
   }
 }
 
 void CropInfo::operator=(const CropInfo &other) {
-     strcpy(name,other.name); 
+     delete[] name;
+     name = createCharPtr(other.name);
      for(int i = 0; i < NUM_YEARS; i++) {
        yieldsByYear[i] = other.yieldsByYear[i];
      }
@@ -42,7 +40,8 @@ Loads the information from the file specified
 void CropInfo::readFromFile(istream &file) {
     file >> cropCode;
     file.ignore(100, ';');
-    file.getline(name, MAX_NAME_LEN, ';');
+    delete[] name;
+    name = readCString(file,';');
     for (int index = 0; index < NUM_YEARS; index++) {
         file >> yieldsByYear[index];
         // Either ignore the ; or \n after each year.
@@ -59,7 +58,8 @@ void CropInfo::readFromUser(){
     cropCode = readDouble("Enter the crop code: ");
     cin.ignore(100, '\n');
     cout << "Enter the crop name: ";
-    cin.getline(name, MAX_NAME_LEN);
+    delete[] name;
+    name = readCString(cin,'\n');
     for (int index = 0; index < NUM_YEARS; index++) {
         // Create the prompt here, no prompt sent to readDouble.
         cout << "Enter the yield for the year " <<  START_YEAR + index << ": ";
